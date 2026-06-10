@@ -26,9 +26,10 @@ const Navbar = () => {
           <Link href="/ideas" className={pathName === "/ideas" ? "text-blue-500 font-semibold underline" : ""}>Ideas</Link>
 
           <Link href="/ad-Idea" className={pathName === "/ad-Idea" ? "text-blue-500 font-semibold underline" : ""}>Add Idea</Link>
-          <Link href="/myIdeas" className={pathName === "/myIdeas" ? "text-blue-500 font-semibold underline " : ""}>My Ideas</Link>
+          <Link href="/myideas" className={pathName === "/myideas" ? "text-blue-500 font-semibold underline " : ""}>My Ideas</Link>
 
-          <Link href="/myInteractions" className={pathName === "/myInteractions" ? "text-blue-500 font-semibold underline " : ""}>My Interactions</Link>
+          <Link href="/my-interactions" 
+          className={pathName === "/my-interactions" ? "text-blue-500 font-semibold underline " : ""}>My Interactions</Link>
 
         </div>
 

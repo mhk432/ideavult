@@ -1,71 +1,117 @@
-
 'use client'
 
+import { Button } from "@heroui/react";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 const AddIdea = () => {
-  const [formData, setFormData] = useState({
+  const [ideas, setIdeas] = useState({
     title: "",
     shortDescription: "",
     detailedDescription: "",
     category: "",
-    tags: "",
     imageURL: "",
-    budget: "",
+    estimatedBudget: "",
     targetAudience: "",
     problemStatement: "",
     proposedSolution: "",
   });
 
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setIdeas({
+      ...ideas,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const value = tagInput.trim();
+
+      if (!value) return;
+
+      if (tags.includes(value)) {
+        toast.error("Tag already added");
+        return;
+      }
+
+      setTags([...tags, value]);
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (indexToRemove) => {
+    setTags(tags.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const newIdea = {
+      ...ideas,
+      tags,
+       userId: "my-self",  //userId: user._id 
+    };
+
+    console.log("Sending Data:", newIdea);
+
     try {
-      // Database API call
-      const response = await fetch("http://localhost:5000/ideas", {
+      const res = await fetch("http://localhost:5000/ideas", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(newIdea),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (data.insertedId) {
+      if (data.insertedId || data.acknowledged) {
         toast.success("Idea Added Successfully!");
-      }
 
+        setIdeas({
+          title: "",
+          shortDescription: "",
+          detailedDescription: "",
+          category: "",
+          imageURL: "",
+          estimatedBudget: "",
+          targetAudience: "",
+          problemStatement: "",
+          proposedSolution: "",
+        });
+
+        setTags([]);
+        setTagInput("");
+        e.target.reset();
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("Failed to add idea");
     }
   };
 
   return (
-    <div className="max-w-2xl my-20 mx-auto p-6 bg-gray-200
-     shadow-lg rounded-xl mt-10">
-
+    <div className="max-w-2xl my-20 mx-auto p-6 bg-gray-200 shadow-lg rounded-xl">
       <h2 className="text-3xl font-bold text-center mb-6">
         Add Startup Idea
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4 ">
+      <form onSubmit={handleSubmit} className="space-y-4">
 
         <input
           type="text"
           name="title"
           placeholder="Idea Title"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
           required
         />
 
@@ -74,7 +120,7 @@ const AddIdea = () => {
           name="shortDescription"
           placeholder="Short Description"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
           required
         />
 
@@ -82,14 +128,14 @@ const AddIdea = () => {
           name="detailedDescription"
           placeholder="Detailed Description"
           onChange={handleChange}
-          className="w-full border p-3 rounded h-28 bg-white"
+          className="w-full border p-3 h-28 bg-white rounded-2xl shadow-2xl"
           required
         />
 
         <select
           name="category"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
           required
         >
           <option value="">Select Category</option>
@@ -100,29 +146,54 @@ const AddIdea = () => {
           <option>Business</option>
         </select>
 
-        <input
-          type="text"
-          name="tags"
-          placeholder="Tags (optional)"
-          onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
-        />
+        {/* Tags Input */}
+        <div className="bg-white p-3 rounded-2xl shadow-2xl border">
+          <input
+            type="text"
+            value={tagInput}
+            placeholder="Type a tag and press Enter"
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagKeyDown}
+            className="w-full outline-none"
+          />
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded-full text-sm"
+                >
+                  <span>{tag}</span>
+
+                  <button
+                    type="button"
+                    onClick={() => removeTag(index)}
+                    className="cursor-pointer"
+                  >
+                    <IoClose size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <input
           type="url"
           name="imageURL"
           placeholder="Image URL"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
           required
         />
 
         <input
           type="number"
-          name="budget"
-          placeholder="Estimated Budget (optional)"
+          name="estimatedBudget"
+          placeholder="Estimated Budget"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
         />
 
         <input
@@ -130,7 +201,7 @@ const AddIdea = () => {
           name="targetAudience"
           placeholder="Target Audience"
           onChange={handleChange}
-          className="w-full border p-3 rounded bg-white"
+          className="w-full border p-3 bg-white rounded-2xl shadow-2xl"
           required
         />
 
@@ -138,7 +209,7 @@ const AddIdea = () => {
           name="problemStatement"
           placeholder="Problem Statement"
           onChange={handleChange}
-          className="w-full border p-3 rounded h-24 bg-white"
+          className="w-full border p-3 h-24 bg-white rounded-2xl shadow-2xl"
           required
         />
 
@@ -146,19 +217,19 @@ const AddIdea = () => {
           name="proposedSolution"
           placeholder="Proposed Solution"
           onChange={handleChange}
-          className="w-full border p-3 rounded h-24 bg-white"
+          className="w-full border p-3 h-24 bg-white rounded-2xl shadow-2xl"
           required
         />
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-lime-500 text-white
-           p-3 rounded-full  flex justify-center"
-           >
-          Submit Idea <IoIosArrowRoundForward size={30} />
-        </button>
+          className="w-full py-6 bg-lime-500 text-blue-600 text-xl rounded-full flex justify-center items-center shadow-2xl"
+        >
+          Submit <IoIosArrowRoundForward />
+        </Button>
 
       </form>
+
       <Toaster />
     </div>
   );
