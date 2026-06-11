@@ -1,10 +1,12 @@
 import Banner from "@/components/Banner";
-import Image from "next/image";
+import FeaturedIdeas from "@/components/FeaturedIdeas";
+
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-purple-200">
       <Banner></Banner>
+        <FeaturedIdeas></FeaturedIdeas>
     </div>
   );
 }

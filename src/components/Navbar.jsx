@@ -4,6 +4,10 @@
 import { User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CiHome } from "react-icons/ci";
+import { FaComments, FaLightbulb } from "react-icons/fa6";
+import { GoPlus } from "react-icons/go";
+import { HiOutlineLightBulb } from "react-icons/hi";
 
 const Navbar = () => {
   const pathName = usePathname();
@@ -20,18 +24,54 @@ const Navbar = () => {
             </div>
           </Link>
         </div>
-        <div className='hidden md:flex gap-8'>
-          <Link href="/" className={pathName === "/" ? "text-blue-500 font-semibold underline" : ""}>Home</Link>
+       <div className="hidden md:flex gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
 
-          <Link href="/ideas" className={pathName === "/ideas" ? "text-blue-500 font-semibold underline" : ""}>Ideas</Link>
+  <Link
+    href="/"
+    className={`flex items-center gap-2 px-3 py-1 rounded-md transition
+      ${pathName === "/" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
+  >
+    <CiHome />
+    Home
+  </Link>
 
-          <Link href="/ad-Idea" className={pathName === "/ad-Idea" ? "text-blue-500 font-semibold underline" : ""}>Add Idea</Link>
-          <Link href="/myideas" className={pathName === "/myideas" ? "text-blue-500 font-semibold underline " : ""}>My Ideas</Link>
+  <Link
+    href="/ideas"
+    className={`flex items-center gap-2 px-3 py-1 rounded-md transition
+      ${pathName === "/ideas" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
+  >
+    <HiOutlineLightBulb />
+    Ideas
+  </Link>
 
-          <Link href="/my-interactions" 
-          className={pathName === "/my-interactions" ? "text-blue-500 font-semibold underline " : ""}>My Interactions</Link>
+  <Link
+    href="/ad-Idea"
+    className={`flex items-center gap-2 px-3 py-1 rounded-md transition
+      ${pathName === "/ad-Idea" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
+  >
+    <GoPlus />
+    Add Idea
+  </Link>
 
-        </div>
+  <Link
+    href="/myideas"
+    className={`flex items-center gap-2 px-3 py-1 rounded-md transition
+      ${pathName === "/myideas" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
+  >
+    <FaLightbulb />
+    My Ideas
+  </Link>
+
+  <Link
+    href="/my-interactions"
+    className={`flex items-center gap-2 px-3 py-1 rounded-md transition
+      ${pathName === "/my-interactions" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
+  >
+    <FaComments />
+    My Interactions
+  </Link>
+
+</div>
 
         <div className="flex gap-2">
 

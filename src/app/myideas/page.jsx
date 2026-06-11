@@ -168,17 +168,17 @@ const MyIdeas = ({ refresh }) => {
 </div> 
             <p className="border-b-2 py-4  "></p>
 
-              <div className="flex gap-2 mt-4">
+              <div className="flex  justify-end gap-2 mt-4 mx-auto">
                 <button
                   onClick={() => openUpdateModal(idea)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded"
+                  className="bg-gray-300 text-blue-500  p-2 py-1 rounded text-3xl"
                 >
                   <FaEdit />
                 </button>
 
                 <button
                   onClick={() => openDeleteModal(idea)}
-                  className="bg-red-500 text-white px-3 py-1 rounded"
+                  className="bg-gray-300 text-red-600 px-3 py-1 rounded text-3xl"
                 >
                   <MdDelete />
                 </button>
@@ -239,6 +239,8 @@ const MyIdeas = ({ refresh }) => {
       <h2 className="text-xl font-bold text-gray-900">
         Delete Idea
       </h2>
+      <p className="border-b my-2 border-1"></p>
+             <div className="text-center">
 
       <p className="mt-3 text-gray-600">
         Are you sure you want to delete{" "}
@@ -250,8 +252,11 @@ const MyIdeas = ({ refresh }) => {
       <p className="text-sm text-gray-400 mt-2">
         This action cannot be undone.
       </p>
+             </div>
+             <p className="border-b my-2 border-1"></p>
 
-      <div className="flex justify-end gap-3 mt-6">
+      <div className="flex  justify-end gap-3 mt-6">
+      
         <button
           onClick={() => setIsDeleteOpen(false)}
           className="px-4 py-2 rounded-xl border hover:bg-gray-100"
@@ -261,7 +266,7 @@ const MyIdeas = ({ refresh }) => {
 
         <button
           onClick={handleDelete}
-          className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700"
+          className=" px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700"
         >
           Delete
         </button>
