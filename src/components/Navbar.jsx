@@ -83,7 +83,7 @@ const Navbar = () => {
             </div>
           </Link>
 
-          <Link href='/register' className="w-[131px] h-[51px] rounded-[15px] cursor-pointer transition-all duration-300 flex items-center justify-center bg-[linear-gradient(to_bottom_right,_#2e8eff_0%,_rgba(46,142,255,0)_30%)] bg-[rgba(46,142,255,0.2)] hover:bg-[rgba(46,142,255,0.7)] hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]">
+          <Link href='/sinup' className="w-[131px] h-[51px] rounded-[15px] cursor-pointer transition-all duration-300 flex items-center justify-center bg-[linear-gradient(to_bottom_right,_#2e8eff_0%,_rgba(46,142,255,0)_30%)] bg-[rgba(46,142,255,0.2)] hover:bg-[rgba(46,142,255,0.7)] hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]">
             <div className="w-[127px] h-[47px] rounded-[13px]  bg-black flex items-center justify-center gap-[15px] text-white font-semibold">
 
               <span>Register</span>

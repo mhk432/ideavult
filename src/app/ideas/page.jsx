@@ -118,7 +118,7 @@ const IdeasPage = () => {
 
 </div>
 
-      {/* 🧱 CARDS */}
+      {/* CARDS */}
       <div className="grid grid-cols-3 gap-8 bg-gray-200 p-8">
 
         {ideas.length === 0 ? (
