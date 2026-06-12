@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 // ⭐ icons
 import { FaEdit } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 
 export default function CommentSection({ ideaId, showInput = true }) {
@@ -112,8 +113,8 @@ export default function CommentSection({ ideaId, showInput = true }) {
             className="w-full p-4 border rounded-xl"
             placeholder="Write comment..."
           />
-          <button className="mt-2 px-6 py-2 bg-green-600 text-white rounded-xl">
-            Post
+          <button className="flex mt-2 px-6 py-2 bg-green-600 text-white rounded-xl">
+            Post comment<FiSend />
           </button>
         </form>
       )}

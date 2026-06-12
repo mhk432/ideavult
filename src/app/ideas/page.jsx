@@ -50,7 +50,7 @@ const IdeasPage = () => {
       <div className="flex flex-col items-center justify-center text-center mb-10 bg-gray-200 p-6 rounded-xl">
 
   {/* Heading */}
-  <h2 className="text-2xl font-bold mb-2">Discover Ideas</h2>
+  <h2 className="text-5xl font-bold mb-2 text-lime-800">Discover Ideas</h2>
   <p className="text-gray-600 mb-6">
     Browse groundbreaking startup ideas from the community. Find your next big opportunity.
   </p>
