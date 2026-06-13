@@ -89,7 +89,7 @@ export default function MyInteractions() {
                     </div>
                 )}
 
-              
+                {/* Empty State */}
                 {!loading && !error && interactions.length === 0 && (
                     <div className="bg-white rounded-3xl p-20 text-center shadow">
                         <FaCommentDots className="mx-auto text-7xl text-gray-300 mb-6" />
