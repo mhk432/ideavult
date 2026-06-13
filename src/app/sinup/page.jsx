@@ -30,6 +30,7 @@ const RegisterPage = () => {
         toast.error(error.message);
         return;
       }
+      console.log(data)
 
       if (res) {
         await authClient.signOut();
@@ -51,12 +52,13 @@ const RegisterPage = () => {
       await authClient.signIn.social({
         provider: "google",
       });
-
+        
       toast.success("Google Login Successful");
     } catch (error) {
       toast.error("Google Login Failed");
     }
   };
+  
 
   return (
     <div
@@ -170,10 +172,10 @@ const RegisterPage = () => {
 </button>
         </form>
 
-        <div className="divider">OR</div>
+       
 
-        <p className="text-center text-2xl font-bold">or</p>
-                                <button className="btn  w-full py-2 rounded-full border border-purple-600 btn-block text-cyan-300 text-center mx-auto flex justify-center items-center bg-lime-950" onClick={handleGoogleSignin}><SiGoogle size={15}  />Loing with Google</button>
+        <p className="text-center text-2xl font-bold mx-2">or</p>
+          <button className="btn  w-full py-2 rounded-full border border-purple-600 btn-block text-cyan-300 text-center mx-auto flex justify-center items-center bg-lime-950" onClick={handleGoogleSignin}><SiGoogle size={15}  />Loing with Google</button>
       </div>
     </div>
   );
