@@ -22,12 +22,13 @@ const DetailsPage = async ({ params }) => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-10">
           
             {/* Back Button */}
             <Link 
                 href="/ideas" 
-                className="inline-flex items-center gap-2 text-green-600 hover:text-red-500 mb-6 font-medium"
+                className="inline-flex items-center gap-2
+                 text-green-600 hover:text-red-500 mb-6 mt-20 font-medium"
             >
                 <FaArrowLeft /> Back to Ideas
             </Link>

@@ -152,7 +152,8 @@ export default function CommentSection({ ideaId, showInput = true }) {
 
           <button
             disabled={posting}
-            className="flex items-center gap-2 mt-2 px-6 py-2 bg-green-600 text-white rounded-xl"
+            className="flex items-center gap-2 mt-2 px-6 py-2 bg-green-600
+             text-white rounded-xl"
           >
             {posting ? "Posting..." : "Post comment"}
             <FiSend />

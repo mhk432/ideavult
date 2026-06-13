@@ -45,7 +45,7 @@ export default function MyInteractions() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50 py-10">
+        <div className="min-h-screen  py-10">
             <div className="max-w-5xl mx-auto px-4">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
@@ -72,7 +72,7 @@ export default function MyInteractions() {
                     Ideas you have commented on
                 </p>
 
-                {/* Loading Spinner */}
+              
                 {loading && (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-14 h-14 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
