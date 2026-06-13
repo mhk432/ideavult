@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 💡 IdeaVault – Startup Idea Sharing Platform
 
-## Getting Started
+## 🌐 Live Site
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📌 Project Overview
+IdeaVault is a web-based platform where users can share their startup ideas, explore ideas posted by others, and engage through comments and discussions. The platform is designed to encourage creativity, collaboration, and idea validation through community interaction.
+
+Instead of focusing on booking or scheduling systems, IdeaVault emphasizes idea sharing and evaluation. Users can discover trending ideas, provide feedback, and help refine concepts collectively within a supportive community environment.
+
+## 🚀 Features
+
+* 🔐 Authentication system (Email & Google login)
+* 🧠 Users can add startup ideas
+* 📄 Ideas list with search & filter system
+* 💬 Comment system (Add, Edit, Delete)
+* 👤 User profile management (update name & photo)
+* 📊 My Ideas dashboard (CRUD operations)
+* 🔔 My Interactions page (comment history)
+* 🌙 Dark / Light theme support (DaisyUI)
+* 📱 Fully responsive design (Mobile, Tablet, Desktop)
+* ⚡ Protected routes using JWT/session
+* 🔍 Trending ideas section on homepage
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend:
+
+* Next.js
+* React.js
+* Tailwind CSS
+* DaisyUI
+* React Icons
+* React Hot Toast
+
+### Backend:
+
+* Node.js
+* Express.js
+* MongoDB
+* JWT Authentication
+
+---
+
+## 📂 Project Structure
+
+```
+client/
+  ├── app/
+  ├── components/
+  ├── lib/
+server/
+  ├── index.js
+  ├── routes/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🔐 Authentication
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Email/Password login
+* Google login
+* JWT token-based session
+* Protected private routes
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 💬 Comments System
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Add comment on ideas
+* Edit own comments
+* Delete own comments
+* Shows user name, image & timestamp
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🎨 UI Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Clean modern UI
+* Consistent spacing & typography
+* DaisyUI theme support
+* Sticky navbar
+* Smooth dropdown profile menu
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ Installation
+
+### Client
+
+```
+npm install
+npm run dev
+```
+
+### Server
+
+```
+npm install
+node index.js
+```
+
+---
+
+## 📌 Important Notes
+
+* No lorem ipsum used
+* No page error on refresh
+* Fully responsive layout
+* Minimum 15 frontend commits
+* Minimum 8 backend commits
+
+---
+
+## 👨‍💻 Author
+
+Md. Harun Khan
+
+---
+
+## ⭐ If you like this project
+
+Give a star ⭐ on GitHub
