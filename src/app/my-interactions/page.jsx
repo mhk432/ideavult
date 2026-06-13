@@ -72,7 +72,7 @@ export default function MyInteractions() {
                     Ideas you have commented on
                 </p>
 
-              
+                {/* Loading Spinner */}
                 {loading && (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-14 h-14 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
@@ -89,7 +89,7 @@ export default function MyInteractions() {
                     </div>
                 )}
 
-                {/* Empty State */}
+              
                 {!loading && !error && interactions.length === 0 && (
                     <div className="bg-white rounded-3xl p-20 text-center shadow">
                         <FaCommentDots className="mx-auto text-7xl text-gray-300 mb-6" />
