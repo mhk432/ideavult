@@ -22,7 +22,7 @@ export default async function FeaturedIdeas() {
     <section className=" py-20">
   <div className="max-w-7xl mx-auto px-4">
 
-    {/* Heading */}
+   
     <div className="text-center mb-8">
       <button
         className="flex justify-center items-center gap-2 px-4 py-1 rounded-full
