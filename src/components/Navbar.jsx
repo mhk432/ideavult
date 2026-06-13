@@ -5,7 +5,7 @@ import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiHome } from "react-icons/ci";
 import { FaComments, FaLightbulb } from "react-icons/fa6";
 import { GoPlus } from "react-icons/go";
@@ -13,13 +13,28 @@ import { HiOutlineLightBulb } from "react-icons/hi";
 
 const Navbar = () => {
   const pathName = usePathname();
+
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { data: session } = authClient.useSession();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="h-20 shadow-xl flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   const handleLogout = async () => {
     await authClient.signOut();
   };
+
 
   return (
     <div>
@@ -100,7 +115,9 @@ const Navbar = () => {
                 onClick={() => setOpen(!open)}
                 className="flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 hover:bg-gray-50"
               >
-                <img
+                <Image
+                  width={40}
+                  height={40}
                   src={session.user.image || "/user.png"}
                   alt={session.user.name}
                   className="w-10 h-10 rounded-full object-cover border-2 border-green-400"
@@ -118,11 +135,11 @@ const Navbar = () => {
 
                   <div className="p-4 border-b">
                     <Image
-                    width={14}
-                    height={14}
+                      width={56}
+                      height={56}
                       src={session.user.image || "/user.png"}
-                      alt={session.user.name}
-                      className="w-14 h-14 rounded-full mx-auto border"
+                      alt={session.user.name || "User"}
+                      className="rounded-full mx-auto border"
                     />
 
                     <h3 className="text-center font-semibold mt-2">
@@ -135,11 +152,32 @@ const Navbar = () => {
                   </div>
 
                   <Link
+                    href="/"
+                    className="block px-4 py-3 hover:bg-gray-100"
+                    onClick={() => setOpen(false)}
+                  >
+                    Home
+                  </Link>
+                  <Link
                     href="/profile"
                     className="block px-4 py-3 hover:bg-gray-100"
                     onClick={() => setOpen(false)}
                   >
-                    Profile
+                    profile
+                  </Link>
+                  <Link
+                    href="/ideas"
+                    className="block px-4 py-3 hover:bg-gray-100"
+                    onClick={() => setOpen(false)}
+                  >
+                    Ideas
+                  </Link>
+                  <Link
+                    href="/ad-Idea"
+                    className="block px-4 py-3 hover:bg-gray-100"
+                    onClick={() => setOpen(false)}
+                  >
+                    Ad-idea
                   </Link>
 
                   <Link
