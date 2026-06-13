@@ -52,7 +52,7 @@ export default function StartupCategories() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-l from-white to-green-50">
+    <section className="py-24 ">
       <div className="max-w-7xl mx-auto px-4">
         
         {/* Section Header */}

@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "daisyui": "^5.5.23",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4"

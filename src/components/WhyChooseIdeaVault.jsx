@@ -54,7 +54,7 @@ export default function WhyChooseIdeaVault() {
   ];
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-white via-lime-50 to-white overflow-hidden">
+    <section className="relative py-24   overflow-hidden">
       
       {/* Decorative Blur Effects */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-lime-200/30 rounded-full blur-3xl"></div>

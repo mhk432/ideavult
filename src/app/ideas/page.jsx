@@ -13,7 +13,7 @@ const IdeasPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // 🔥 FETCH FUNCTION
+  //  FETCH FUNCTION
   const fetchIdeas = async () => {
     try {
       const params = new URLSearchParams();

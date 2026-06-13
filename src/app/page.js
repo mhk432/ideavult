@@ -6,7 +6,7 @@ import WhyChooseIdeaVault from "@/components/WhyChooseIdeaVault";
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-b from-lime-50 via-white to-green-50">
+    <div className="" >
       <Banner></Banner>
         <FeaturedIdeas></FeaturedIdeas>
         <WhyChooseIdeaVault></WhyChooseIdeaVault>

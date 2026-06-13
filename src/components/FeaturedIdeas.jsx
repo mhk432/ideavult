@@ -19,7 +19,7 @@ export default async function FeaturedIdeas() {
 
   return (
 
-    <section className="bg-gradient-to-b from-lime-50 via-white to-green-50 py-20">
+    <section className=" py-20">
   <div className="max-w-7xl mx-auto px-4">
 
     {/* Heading */}

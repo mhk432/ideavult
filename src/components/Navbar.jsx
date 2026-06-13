@@ -36,9 +36,26 @@ const Navbar = () => {
   };
 
 
+
+
+  const toggleTheme = () => {
+  const currentTheme =
+    document.documentElement.getAttribute("data-theme");
+
+  const newTheme =
+    currentTheme === "light" ? "dark" : "light";
+
+  document.documentElement.setAttribute(
+    "data-theme",
+    newTheme
+  );
+
+  localStorage.setItem("theme", newTheme);
+};
+
   return (
     <div>
-      <div className="flex justify-between items-center px-20 p-5 shadow-xl">
+      <div className="  fixed flex justify-between items-center px-20 p-5 shadow-xl  top-0 z-50 w-full border-b border-base-300 bg-base-100/90 backdrop-blur-md">
 
         {/* Logo */}
         <div>
@@ -105,8 +122,11 @@ const Navbar = () => {
 
         </div>
 
+
         {/* Auth Section */}
         <div className="flex gap-2 items-center">
+        
+        <input type="checkbox"  onClick={toggleTheme} defaultChecked className="toggle toggle-primary" />
 
           {session?.user ? (
             <div className="relative">

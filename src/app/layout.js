@@ -22,10 +22,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html
-      lang="en"
+      lang="en" data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className=" flex flex-col bg-base-100 text-base-content min-h-screen">
+      
         <Navbar></Navbar>
         {children}
           <Toaster position="top-right" />
