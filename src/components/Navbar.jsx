@@ -1,256 +1,158 @@
 'use client'
 
 import { authClient } from "@/lib/auth-client";
-import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CiHome } from "react-icons/ci";
-import { FaComments, FaLightbulb } from "react-icons/fa6";
+import { CiHome, CiUser } from "react-icons/ci";
+import { FaComments, FaLightbulb, FaTimes } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import { HiOutlineLightBulb } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 
 const Navbar = () => {
   const pathName = usePathname();
-
   const [open, setOpen] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return (
-     <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+  const handleLogout = async () => {
+    await authClient.signOut();
+    setOpen(false);
+    setMobileMenu(false);
+  };
 
+  const toggleTheme = () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
+  // ==================== LOADING SPINNER ====================
+  if (!mounted || isPending) {
+    return (
+      <div className="fixed top-0 left-0 right-0 z-50 h-20 bg-base-100/95 backdrop-blur-md border-b border-base-300 flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-green-500"></span>
+      </div>
     );
   }
 
-  const handleLogout = async () => {
-    await authClient.signOut();
-  };
-
-
-
-
-  const toggleTheme = () => {
-  const currentTheme =
-    document.documentElement.getAttribute("data-theme");
-
-  const newTheme =
-    currentTheme === "light" ? "dark" : "light";
-
-  document.documentElement.setAttribute(
-    "data-theme",
-    newTheme
-  );
-
-  localStorage.setItem("theme", newTheme);
-};
-
   return (
-    <div>
-      <div className="  fixed flex justify-between items-center px-20 p-5 shadow-xl  top-0 z-50 w-full border-b border-base-300 bg-base-100/90 backdrop-blur-md">
-
+    <div className="fixed top-0 left-0 right-0 z-50 bg-base-100/95 backdrop-blur-md border-b border-base-300 shadow-md">
+      <div className="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center">
+        
         {/* Logo */}
-        <div>
-          <Link href="/" className="flex items-center gap-3">
-            <div className="text-3xl">💡</div>
-            <div className="font-bold text-2xl tracking-tight text-gray-900 dark:text-white">
-              <span className="text-green-400">Idea</span>
-              <span className="text-green-600">Vault</span>
-            </div>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="text-3xl">💡</div>
+          <div className="font-bold text-2xl tracking-tight">
+            <span className="text-green-500">Idea</span>
+            <span className="text-green-600">Vault</span>
+          </div>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-2 bg-white/60 dark:bg-gray-800 px-4 py-2 rounded-full shadow-sm">
+          <Link href="/" className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${pathName === "/" ? "bg-lime-200 text-green-700 font-medium" : "hover:bg-gray-100"}`}>
+            <CiHome /> Home
           </Link>
-        </div>
-
-        {/* Nav Links */}
-        <div className="hidden md:flex gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
-
-          <Link
-            href="/"
-            className={`flex items-center gap-2 px-3 py-1 rounded-md transition
-            ${pathName === "/" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
-          >
-            <CiHome />
-            Home
-          </Link>
-
-          <Link
-            href="/ideas"
-            className={`flex items-center gap-2 px-3 py-1 rounded-md transition
-            ${pathName === "/ideas" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
-          >
-            <HiOutlineLightBulb />
-            Ideas
+          <Link href="/ideas" className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${pathName === "/ideas" ? "bg-lime-200 text-green-700 font-medium" : "hover:bg-gray-100"}`}>
+            <HiOutlineLightBulb /> Ideas
           </Link>
 
           {session?.user && (
             <>
-              <Link
-                href="/ad-Idea"
-                className={`flex items-center gap-2 px-3 py-1 rounded-md transition
-                ${pathName === "/ad-Idea" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
-              >
-                <GoPlus />
-                Add Idea
+              <Link href="/ad-Idea" className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${pathName === "/ad-Idea" ? "bg-lime-200 text-green-700 font-medium" : "hover:bg-gray-100"}`}>
+                <GoPlus /> Add Idea
               </Link>
-
-              <Link
-                href="/myideas"
-                className={`flex items-center gap-2 px-3 py-1 rounded-md transition
-                ${pathName === "/myideas" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
-              >
-                <FaLightbulb />
-                My Ideas
+              <Link href="/myideas" className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${pathName === "/myideas" ? "bg-lime-200 text-green-700 font-medium" : "hover:bg-gray-100"}`}>
+                <FaLightbulb /> My Ideas
               </Link>
-
-              <Link
-                href="/my-interactions"
-                className={`flex items-center gap-2 px-3 py-1 rounded-md transition
-                ${pathName === "/my-interactions" ? "border-2 border-green-300 bg-lime-200" : "hover:bg-gray-100"}`}
-              >
-                <FaComments />
-                My Interactions
+              <Link href="/my-interactions" className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${pathName === "/my-interactions" ? "bg-lime-200 text-green-700 font-medium" : "hover:bg-gray-100"}`}>
+                <FaComments /> Interactions
               </Link>
             </>
           )}
-
         </div>
 
+        {/* Right Side */}
+        <div className="flex items-center gap-4">
+          <input type="checkbox" onClick={toggleTheme} defaultChecked className="toggle toggle-primary" />
 
-        {/* Auth Section */}
-        <div className="flex gap-2 items-center">
-        
-        <input type="checkbox"  onClick={toggleTheme} defaultChecked className="toggle toggle-primary" />
+          <button onClick={() => setMobileMenu(!mobileMenu)} className="md:hidden text-3xl">
+            {mobileMenu ? <FaTimes /> : <HiMenu />}
+          </button>
 
           {session?.user ? (
             <div className="relative">
-
-              <button
-                onClick={() => setOpen(!open)}
-                className="flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 hover:bg-gray-50"
-              >
-                <Image
-                  width={40}
-                  height={40}
-                  src={session.user.image || "/user.png"}
-                  alt={session.user.name}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-green-400"
-                />
-
-                <div className="hidden md:block text-left">
-                  <h3 className="font-semibold text-sm">
-                    {session.user.name}
-                  </h3>
-                </div>
+              <button onClick={() => setOpen(!open)} className="flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 hover:bg-gray-50">
+                <Image width={42} height={42} src={session.user.image || "/user.png"} alt="" className="rounded-full border-2 border-green-400" />
               </button>
 
               {open && (
-                <div className="absolute right-0 mt-3 w-60 rounded-xl bg-white shadow-xl border z-50 overflow-hidden">
-
-                  <div className="p-4 border-b">
-                    <Image
-                      width={56}
-                      height={56}
-                      src={session.user.image || "/user.png"}
-                      alt={session.user.name || "User"}
-                      className="rounded-full mx-auto border"
-                    />
-
-                    <h3 className="text-center font-semibold mt-2">
-                      {session.user.name}
-                    </h3>
-
-                    <p className="text-center text-xs text-gray-500">
-                      {session.user.email}
-                    </p>
+                <div className="absolute right-0 mt-3 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border z-50 py-2">
+                  <div className="px-6 py-5 border-b text-center">
+                    <Image width={75} height={75} src={session.user.image || "/user.png"} alt="" className="rounded-full mx-auto border-4 border-green-400" />
+                    <h3 className="font-semibold mt-3">{session.user.name}</h3>
+                    <p className="text-sm text-gray-500">{session.user.email}</p>
                   </div>
 
-                  <Link
-                    href="/"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    Home
+                  <Link href="/" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>🏠 Home</Link>
+                  <Link href="/profile" className="block flex items-center gap-2 px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>
+                    <CiUser className="text-blue-400 text-2xl" /> Profile
                   </Link>
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    profile
-                  </Link>
-                  <Link
-                    href="/ideas"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    Ideas
-                  </Link>
-                  <Link
-                    href="/ad-Idea"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    Ad-idea
-                  </Link>
+                  <Link href="/ideas" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>💡 All Ideas</Link>
+                  <Link href="/ad-Idea" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>➕ Add Idea</Link>
+                  <Link href="/myideas" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>🌟 My Ideas</Link>
+                  <Link href="/my-interactions" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>💬 My Interactions</Link>
 
-                  <Link
-                    href="/myideas"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    My Ideas
-                  </Link>
-
-                  <Link
-                    href="/my-interactions"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setOpen(false)}
-                  >
-                    My Interactions
-                  </Link>
-
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50"
-                  >
-                    Logout
-                  </button>
-
+                  <div className="border-t mt-2 pt-2">
+                    <button onClick={handleLogout} className="w-full text-left px-6 py-3 text-red-500 hover:bg-red-50">Logout</button>
+                  </div>
                 </div>
               )}
             </div>
           ) : (
-            <>
-              <Link
-                href="/login"
-                className="w-[131px] h-[51px] rounded-[15px] cursor-pointer transition-all duration-300 flex items-center justify-center bg-[linear-gradient(to_bottom_right,_#2e8eff_0%,_rgba(46,142,255,0)_30%)] bg-[rgba(46,142,255,0.2)] hover:bg-[rgba(46,142,255,0.7)] hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]"
-              >
-                <div className="w-[127px] h-[47px] rounded-[13px] bg-black flex items-center justify-center gap-[15px] text-white font-semibold">
-                  <User className="w-[27px] h-[27px]" />
-                  <span>Login</span>
-                </div>
-              </Link>
-
-              <Link
-                href="/sinup"
-                className="w-[131px] h-[51px] rounded-[15px] cursor-pointer transition-all duration-300 flex items-center justify-center bg-[linear-gradient(to_bottom_right,_#2e8eff_0%,_rgba(46,142,255,0)_30%)] bg-[rgba(46,142,255,0.2)] hover:bg-[rgba(46,142,255,0.7)] hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]"
-              >
-                <div className="w-[127px] h-[47px] rounded-[13px] bg-black flex items-center justify-center text-white font-semibold">
-                  Register
-                </div>
-              </Link>
-            </>
+            <div className="flex gap-3">
+              <Link href="/login" className="btn btn-outline">Login</Link>
+              <Link href="/sinup" className="btn btn-primary">Register</Link>
+            </div>
           )}
-
         </div>
-
       </div>
+
+      {/* ==================== MOBILE MENU ==================== */}
+      {mobileMenu && (
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t py-6 px-6 shadow-lg">
+          <div className="flex flex-col gap-4 text-lg">
+            <Link href="/" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl">🏠 Home</Link>
+            <Link href="/ideas" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl">💡 Ideas</Link>
+
+            {session?.user ? (
+              <>
+                <Link href="/profile" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl flex items-center gap-2">
+                  <CiUser className="text-xl" /> Profile
+                </Link>
+                <Link href="/ad-Idea" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl">➕ Add Idea</Link>
+                <Link href="/myideas" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl">🌟 My Ideas</Link>
+                <Link href="/my-interactions" onClick={() => setMobileMenu(false)} className="py-3 px-4 hover:bg-gray-100 rounded-xl">💬 My Interactions</Link>
+              </>
+            ) : (
+              <div className="flex flex-col gap-3 pt-6">
+                <Link href="/login" onClick={() => setMobileMenu(false)} className="btn btn-outline w-full text-center py-3">Login</Link>
+                <Link href="/sinup" onClick={() => setMobileMenu(false)} className="btn btn-primary w-full text-center py-3">Register</Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
