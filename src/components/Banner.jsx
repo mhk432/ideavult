@@ -11,19 +11,19 @@ export default function Hero() {
     {
       title: "Turn Your Idea Into Reality",
       desc: "Join the community of innovators and startup founders",
-      bgImg: "https://media.istockphoto.com/id/1363471021/photo/talking-notes-and-looking-at-laptop-computer-at-home-office-handsome-young-adult-man-casual.jpg?s=2048x2048&w=is&k=20&c=Oi2XtIsYQTu_rzm5hpcgrsmECrI4xa3C5nFi9gj-318=",
+      bgImg: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
       cta: "Explore Ideas"
     },
     {
       title: "Share  Validate  Grow",
       desc: "Get honest feedback from real entrepreneurs",
-      bgImg: "https://media.istockphoto.com/id/2232994785/photo/businessman-approving-document-on-digital-platform-using-laptop-concept-for-online-contract-e.jpg?s=2048x2048&w=is&k=20&c=JUjV4cGwvruZuTypw8XWPZwLch0bqJLe2kG-wt-41X4=",
+      bgImg: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       cta: "Explore Ideas"
     },
     {
       title: "Innovation Has No Limits",
       desc: "Discover groundbreaking startup ideas every day",
-      bgImg: "https://media.istockphoto.com/id/2200550660/photo/ai-data-analysis-business-people-use-ai-to-analyze-financial-related-data-big-data-complex.jpg?s=2048x2048&w=is&k=20&c=Hjqa3SoC3ZYhtpXMW6v69_DWqKm4AcCQcBFHtIylMIA=",
+      bgImg: "https://plus.unsplash.com/premium_photo-1683121716061-3faddf4dc504?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       cta: "Explore Ideas"
     },
   ];

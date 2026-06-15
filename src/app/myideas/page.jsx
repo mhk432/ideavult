@@ -131,9 +131,8 @@ const MyIdeas = ({ refresh }) => {
 
   if (loading) {
     return (
-      <p className="text-center mt-20 text-gray-500">
-        Loading latest ideas...
-      </p>
+      
+      <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
     );
   }
 
@@ -165,7 +164,12 @@ const MyIdeas = ({ refresh }) => {
         #{tag}
       </span>
     ))}
+
 </div> 
+
+          <p className="py-2 text-gray-600">{idea.shortDescription}</p>
+
+
             <p className="border-b-2 py-4  "></p>
 
               <div className="flex  justify-end gap-2 mt-4 mx-auto">

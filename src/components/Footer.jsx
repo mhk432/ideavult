@@ -29,7 +29,7 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-4">Community</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/add-idea" className="hover:text-white">Add Idea</Link></li>
+              <li><Link href="/ad-Idea" className="hover:text-white">Add Idea</Link></li>
               <li><Link href="/my-ideas" className="hover:text-white">My Ideas</Link></li>
               <li><Link href="/my-interactions" className="hover:text-white">My Interactions</Link></li>
             </ul>

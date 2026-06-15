@@ -25,9 +25,8 @@ const Navbar = () => {
 
   if (!mounted) {
     return (
-      <div className="h-20 shadow-xl flex items-center justify-center">
-        Loading...
-      </div>
+     <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+
     );
   }
 

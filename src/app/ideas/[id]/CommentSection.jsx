@@ -152,8 +152,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
 
           <button
             disabled={posting}
-            className="flex items-center gap-2 mt-2 px-6 py-2 bg-green-600
-             text-white rounded-xl"
+            className="flex items-center gap-2 mt-2 px-6 py-2 bg-green-600 text-white rounded-xl"
           >
             {posting ? "Posting..." : "Post comment"}
             <FiSend />
@@ -163,7 +162,9 @@ export default function CommentSection({ ideaId, showInput = true }) {
 
       {/* LIST */}
       {loading ? (
-        <p>Loading...</p>
+
+      <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+
       ) : (
         comments.map((c) => (
           <div key={c.id} className="p-4 border rounded-xl mb-3 bg-gray-50">
@@ -241,7 +242,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
               </div>
             ) : (
               
-              <p className="mt-2">{c.text}</p>
+              <p className="mt-2  p-4 bg-gray-200 text-g ">{c.text}</p>
             )}
           </div>
         ))

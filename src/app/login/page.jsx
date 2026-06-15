@@ -1,14 +1,13 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SiGoogle } from "react-icons/si";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const {
     register,
     handleSubmit,
@@ -16,13 +15,19 @@ const LoginPage = () => {
   } = useForm();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleLogin = async (data) => {
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const handleRegister = async (data) => {
+    const { name, email, photo, password } = data;
+
     try {
-      const { data: res, error } = await authClient.signIn.email({
-        email: data.email,
-        password: data.password,
-        rememberMe: true,
+      const { data: res, error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        image: photo,
       });
 
       if (error) {
@@ -30,11 +35,17 @@ const LoginPage = () => {
         return;
       }
 
+      console.log(data);
+
       if (res) {
-        toast.success("Login successful!");
+        await authClient.signOut();
+
+        toast.success("Account created successfully!");
 
         setTimeout(() => {
-          router.push("/");
+          router.push(
+            `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+          );
         }, 1500);
       }
     } catch (err) {
@@ -47,6 +58,7 @@ const LoginPage = () => {
     try {
       await authClient.signIn.social({
         provider: "google",
+        callbackURL: callbackUrl,
       });
 
       toast.success("Google Login Successful");
@@ -56,17 +68,59 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container mx-auto min-h-[80vh] flex justify-center items-center bg-gray-100 px-4">
+    <div
+      className="container mx-auto min-h-[80vh] flex
+      justify-center items-center bg-gray-100 px-4"
+    >
       <div className="w-full max-w-md p-8 rounded-3xl bg-white shadow-xl my-20">
-
         <h1 className="text-3xl font-bold text-center mb-6">
-          Login Your Account
+          Register Your Account
         </h1>
 
         <form
           className="space-y-4"
-          onSubmit={handleSubmit(handleLogin)}
+          onSubmit={handleSubmit(handleRegister)}
         >
+          {/* Name */}
+          <fieldset>
+            <legend className="font-bold mb-2">Name</legend>
+
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="Enter your name"
+              {...register("name", {
+                required: "Name is required",
+              })}
+            />
+
+            {errors.name && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.name.message}
+              </p>
+            )}
+          </fieldset>
+
+          {/* Photo URL */}
+          <fieldset>
+            <legend className="font-bold mb-2">Photo URL</legend>
+
+            <input
+              type="url"
+              className="input input-bordered w-full"
+              placeholder="Enter photo URL"
+              {...register("photo", {
+                required: "Photo URL is required",
+              })}
+            />
+
+            {errors.photo && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.photo.message}
+              </p>
+            )}
+          </fieldset>
+
           {/* Email */}
           <fieldset>
             <legend className="font-bold mb-2">Email</legend>
@@ -76,7 +130,7 @@ const LoginPage = () => {
               className="input input-bordered w-full"
               placeholder="Enter your email"
               {...register("email", {
-                required: "Email field is required",
+                required: "Email is required",
               })}
             />
 
@@ -94,9 +148,19 @@ const LoginPage = () => {
             <input
               type="password"
               className="input input-bordered w-full"
-              placeholder="Enter your password"
+              placeholder="Enter password"
               {...register("password", {
-                required: "Password field is required",
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message:
+                    "Password must be at least 6 characters long",
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z]).+$/,
+                  message:
+                    "Password must contain at least one uppercase and one lowercase letter",
+                },
               })}
             />
 
@@ -107,46 +171,38 @@ const LoginPage = () => {
             )}
           </fieldset>
 
-          {/* Forgot Password UI Only */}
-          <div className="text-right">
-            <Link
-              href="#"
-              className="text-sm text-blue-500 hover:underline"
-            >
-              Forgot Password?
-            </Link>
-          </div>
-
-          {/* Login Button */}
           <button
             type="submit"
             className="w-full bg-lime-500 hover:bg-lime-600 text-white py-3 rounded-xl font-semibold transition"
           >
-            Login
+            Register
           </button>
         </form>
 
-        
-        
-
         <p className="text-center text-2xl font-bold mx-2">or</p>
-             <button className="btn  w-full py-2 rounded-full border border-purple-600 btn-block text-cyan-300 text-center mx-auto flex justify-center items-center bg-lime-950" onClick={handleGoogleSignin}><SiGoogle size={15}  />Loing with Google</button>
 
-        {/* Register Link */}
+        <button
+          className="btn w-full py-2 rounded-full border border-purple-600 btn-block text-cyan-300 text-center mx-auto flex justify-center items-center bg-lime-950"
+          onClick={handleGoogleSignin}
+        >
+          <SiGoogle size={15} />
+          Login with Google
+        </button>
+
         <p className="mt-5 text-center text-gray-600">
-          Don have an account?{" "}
+          Already have an account?{" "}
           <Link
-            href="/register"
+            href={`/login?callbackUrl=${encodeURIComponent(
+              callbackUrl
+            )}`}
             className="text-blue-500 font-semibold hover:underline"
           >
-            Register
+            Login
           </Link>
         </p>
-
-        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
