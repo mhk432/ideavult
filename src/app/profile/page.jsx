@@ -5,6 +5,7 @@ import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FiEdit } from "react-icons/fi";
 
 export default function ProfilePage() {
   const { data: session, isPending } = authClient.useSession();
@@ -45,9 +46,8 @@ export default function ProfilePage() {
   // loading state
   if (isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
+           <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+
     );
   }
 
@@ -106,7 +106,7 @@ export default function ProfilePage() {
             </div>
 
             {/* image */}
-            {/* <div>
+            <div>
               <label className="font-medium">Photo URL</label>
               <input
                 type="text"
@@ -115,26 +115,16 @@ export default function ProfilePage() {
                 className="w-full border p-3 rounded-xl mt-2"
                 placeholder="Enter image URL"
               />
-            </div> */}
-
-            {/* email */}
-            <div>
-              <label className="font-medium">Email</label>
-              <input
-                type="email"
-                value={session.user.email}
-                disabled
-                className="w-full border p-3 rounded-xl mt-2 bg-gray-100"
-              />
             </div>
 
+           
             {/* button */}
             <Button
               type="submit"
               disabled={loading}
               className="mt-5 mb-5 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-semibold"
-            >
-              {loading ? "Updating..." : "Update Profile"}
+            ><FiEdit />
+              {loading ? "Updating..." : "Edit Profile"}
             </Button>
 
           </form>

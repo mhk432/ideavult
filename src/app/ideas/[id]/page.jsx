@@ -2,13 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import CommentSection from "./CommentSection"; 
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const DetailsPage = async ({ params }) => {
     const { id } = await params;  
 
+    const token = await auth.api.getToken({
+        headers : await headers()
+    })
+
+      console.log(token)
+
     let ideas;
     try {
         const res = await fetch(`http://localhost:5000/ideas/${id}`, {
+            // headers :{
+            //     authorization :`Bearer ${token.token}`
+
+            // },
             cache: "no-store"  
         });
         ideas = await res.json();

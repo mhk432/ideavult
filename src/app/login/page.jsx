@@ -1,13 +1,14 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SiGoogle } from "react-icons/si";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { SiGoogle } from "react-icons/si";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const RegisterPage = () => {
+const LoginPage = () => {
   const {
     register,
     handleSubmit,
@@ -19,15 +20,12 @@ const RegisterPage = () => {
 
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const handleRegister = async (data) => {
-    const { name, email, photo, password } = data;
-
+  const handleLogin = async (data) => {
     try {
-      const { data: res, error } = await authClient.signUp.email({
-        name,
-        email,
-        password,
-        image: photo,
+      const { data: res, error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        rememberMe: true,
       });
 
       if (error) {
@@ -35,17 +33,11 @@ const RegisterPage = () => {
         return;
       }
 
-      console.log(data);
-
       if (res) {
-        await authClient.signOut();
-
-        toast.success("Account created successfully!");
+        toast.success("Login successful!");
 
         setTimeout(() => {
-          router.push(
-            `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
-          );
+          router.push(callbackUrl);
         }, 1500);
       }
     } catch (err) {
@@ -68,60 +60,16 @@ const RegisterPage = () => {
   };
 
   return (
-    <div
-      className="container mx-auto min-h-[80vh] flex
-      justify-center items-center bg-gray-100 px-4"
-    >
+    <div className="container mx-auto min-h-[80vh] flex justify-center items-center bg-gray-100 px-4">
       <div className="w-full max-w-md p-8 rounded-3xl bg-white shadow-xl my-20">
         <h1 className="text-3xl font-bold text-center mb-6">
-          Register Your Account
+          Login Your Account
         </h1>
 
         <form
           className="space-y-4"
-          onSubmit={handleSubmit(handleRegister)}
+          onSubmit={handleSubmit(handleLogin)}
         >
-          {/* Name */}
-          <fieldset>
-            <legend className="font-bold mb-2">Name</legend>
-
-            <input
-              type="text"
-              className="input input-bordered w-full"
-              placeholder="Enter your name"
-              {...register("name", {
-                required: "Name is required",
-              })}
-            />
-
-            {errors.name && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.name.message}
-              </p>
-            )}
-          </fieldset>
-
-          {/* Photo URL */}
-          <fieldset>
-            <legend className="font-bold mb-2">Photo URL</legend>
-
-            <input
-              type="url"
-              className="input input-bordered w-full"
-              placeholder="Enter photo URL"
-              {...register("photo", {
-                required: "Photo URL is required",
-              })}
-            />
-
-            {errors.photo && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.photo.message}
-              </p>
-            )}
-          </fieldset>
-
-          {/* Email */}
           <fieldset>
             <legend className="font-bold mb-2">Email</legend>
 
@@ -130,7 +78,7 @@ const RegisterPage = () => {
               className="input input-bordered w-full"
               placeholder="Enter your email"
               {...register("email", {
-                required: "Email is required",
+                required: "Email field is required",
               })}
             />
 
@@ -141,26 +89,15 @@ const RegisterPage = () => {
             )}
           </fieldset>
 
-          {/* Password */}
           <fieldset>
             <legend className="font-bold mb-2">Password</legend>
 
             <input
               type="password"
               className="input input-bordered w-full"
-              placeholder="Enter password"
+              placeholder="Enter your password"
               {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message:
-                    "Password must be at least 6 characters long",
-                },
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z]).+$/,
-                  message:
-                    "Password must contain at least one uppercase and one lowercase letter",
-                },
+                required: "Password field is required",
               })}
             />
 
@@ -171,11 +108,20 @@ const RegisterPage = () => {
             )}
           </fieldset>
 
+          <div className="text-right">
+            <Link
+              href="#"
+              className="text-sm text-blue-500 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-lime-500 hover:bg-lime-600 text-white py-3 rounded-xl font-semibold transition"
           >
-            Register
+            Login
           </button>
         </form>
 
@@ -190,19 +136,21 @@ const RegisterPage = () => {
         </button>
 
         <p className="mt-5 text-center text-gray-600">
-          Already have an account?{" "}
+          Don't have an account?{" "}
           <Link
-            href={`/login?callbackUrl=${encodeURIComponent(
+            href={`/register?callbackUrl=${encodeURIComponent(
               callbackUrl
             )}`}
             className="text-blue-500 font-semibold hover:underline"
           >
-            Login
+            Register
           </Link>
         </p>
+
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

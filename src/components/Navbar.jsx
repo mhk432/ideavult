@@ -10,6 +10,7 @@ import { FaComments, FaLightbulb, FaTimes } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { HiMenu } from "react-icons/hi";
+import { MdOutlineLogout } from "react-icons/md";
 
 const Navbar = () => {
   const pathName = usePathname();
@@ -114,7 +115,7 @@ const Navbar = () => {
                   <Link href="/my-interactions" className="block px-6 py-3 hover:bg-gray-100" onClick={() => setOpen(false)}>💬 My Interactions</Link>
 
                   <div className="border-t mt-2 pt-2">
-                    <button onClick={handleLogout} className="w-full text-left px-6 py-3 text-red-500 hover:bg-red-50">Logout</button>
+                    <button onClick={handleLogout} className="w-full text-left flex items-center gap-1 px-6 py-3 text-red-500 hover:bg-red-50"><MdOutlineLogout /> Logout</button>
                   </div>
                 </div>
               )}

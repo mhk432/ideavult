@@ -115,9 +115,9 @@ const IdeasPage = () => {
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 bg-gray-200 p-4 sm:p-6 lg:p-8 rounded-2xl">
 
     {ideas.length === 0 ? (
-      <p className="text-center sm:col-span-2 xl:col-span-3 text-gray-500">
-        No ideas found
-      </p>
+
+    <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+
     ) : (
       ideas.map((idea) => (
         <div

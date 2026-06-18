@@ -5,14 +5,16 @@ import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 const MyIdeas = ({ refresh }) => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+
   const [selectedIdea, setSelectedIdea] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -28,20 +30,34 @@ const MyIdeas = ({ refresh }) => {
     proposedSolution: "",
   });
 
-  // FETCH
+  // ================= FETCH =================
   const fetchIdeas = async () => {
     try {
       setLoading(true);
 
+      const session = await authClient.getSession();
+
+      const token =
+        session?.data?.session?.token ||
+        session?.data?.sessionToken ||
+        session?.data?.token;
+
       const res = await fetch("http://localhost:5000/my-ideas", {
         cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
       });
 
+      if (!res.ok) {
+        setIdeas([]);
+        return;
+      }
+
       const data = await res.json();
-      setIdeas(data);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load ideas");
+      setIdeas(Array.isArray(data) ? data : []);
+
+    } catch (err) {
       setIdeas([]);
     } finally {
       setLoading(false);
@@ -52,8 +68,8 @@ const MyIdeas = ({ refresh }) => {
     fetchIdeas();
   }, [refresh]);
 
-  // OPEN UPDATE
-  const openUpdateModal = (idea) => {
+  // ================= OPEN UPDATE =================
+  const openUpdate = (idea) => {
     setSelectedIdea(idea);
 
     setFormData({
@@ -61,7 +77,7 @@ const MyIdeas = ({ refresh }) => {
       shortDescription: idea.shortDescription || "",
       detailedDescription: idea.detailedDescription || "",
       category: idea.category || "",
-      tags: Array.isArray(idea.tags) ? idea.tags.join(", ") : "",
+      tags: idea.tags?.join(", ") || "",
       imageURL: idea.imageURL || "",
       estimatedBudget: idea.estimatedBudget || "",
       targetAudience: idea.targetAudience || "",
@@ -73,23 +89,12 @@ const MyIdeas = ({ refresh }) => {
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // ================= UPDATE =================
   const handleUpdate = async () => {
     try {
-      const updatedData = {
-        ...formData,
-        tags: formData.tags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
-      };
-
       const res = await fetch(
         `http://localhost:5000/ideas/${selectedIdea._id}`,
         {
@@ -97,31 +102,29 @@ const MyIdeas = ({ refresh }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updatedData),
+          body: JSON.stringify({
+            ...formData,
+            tags: formData.tags.split(",").map(t => t.trim())
+          }),
         }
       );
 
       const data = await res.json();
 
       if (data.modifiedCount > 0) {
-        fetchIdeas();
+        toast.success("Idea updated 🚀");
         setIsUpdateOpen(false);
-        toast.success("Idea updated successfully 🎉");
+        fetchIdeas();
       } else {
-        toast.error("No changes made");
+        toast.error("No changes found");
       }
-    } catch (error) {
-      console.log(error);
+
+    } catch (err) {
       toast.error("Update failed");
     }
   };
 
   // ================= DELETE =================
-  const openDeleteModal = (idea) => {
-    setSelectedIdea(idea);
-    setIsDeleteOpen(true);
-  };
-
   const handleDelete = async () => {
     try {
       const res = await fetch(
@@ -132,137 +135,149 @@ const MyIdeas = ({ refresh }) => {
       const data = await res.json();
 
       if (data.deletedCount > 0) {
-        setIdeas((prev) =>
-          prev.filter((i) => i._id !== selectedIdea._id)
-        );
-
+        setIdeas(prev => prev.filter(i => i._id !== selectedIdea._id));
         setIsDeleteOpen(false);
-
-        toast.success("Idea deleted successfully ");
+        toast.success("Deleted successfully");
       } else {
         toast.error("Delete failed");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+
+    } catch (err) {
+      toast.error("Error");
     }
   };
 
   if (loading) {
     return (
-      <span className="loading loading-bars my-10 loading-xl mx-auto text-center text-red-500"></span>
+      <p className="text-center mt-20 text-gray-500">
+        Loading your ideas...
+      </p>
     );
   }
 
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster />
 
-      {/* ================= CARDS ================= */}
-      <div className="mt-20 px-4 sm:px-6 md:px-10 lg:px-20">
+      <div className="my-20 px-4 sm:px-8 lg:px-20">
 
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6">
-          My Ideas
-        </h1>
+        {/* HEADER */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">
+            My Ideas
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Manage all your creative ideas in one place
+          </p>
+        </div>
 
+        {/* GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {ideas.map((idea) => (
             <div
               key={idea._id}
-              className="bg-white shadow-md hover:shadow-xl transition rounded-2xl p-4"
+              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden border"
             >
 
-              <Image
-                src={idea.imageURL || "/placeholder.png"}
-                alt={idea.title}
-                width={500}
-                height={300}
-                className="rounded-xl w-full object-cover"
-              />
+              {/* IMAGE */}
+              <div className="relative h-48 w-full">
+                <Image
+                  src={idea.imageURL || "/placeholder.png"}
+                  fill
+                  className="object-cover"
+                  alt="idea"
+                />
+              </div>
 
-              <h2 className="font-bold mt-3 text-lg">
-                {idea.title}
-              </h2>
+              {/* CONTENT */}
+              <div className="p-4">
 
-              <div className="flex flex-wrap gap-2 mt-2">
-                {Array.isArray(idea.tags) &&
-                  idea.tags.map((tag, i) => (
+                <h2 className="font-bold text-lg text-gray-800">
+                  {idea.title}
+                </h2>
+
+                <p className="text-sm text-gray-500 mt-1">
+                  {idea.shortDescription}
+                </p>
+
+                {/* TAGS */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {idea.tags?.map((tag, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1 text-xs font-semibold bg-lime-200 text-lime-800 rounded-full"
+                      className="
+                        text-xs px-3 py-1 rounded-full
+                        bg-gradient-to-r from-green-100 to-lime-100
+                        text-green-700 border border-green-200
+                      "
                     >
                       #{tag}
                     </span>
                   ))}
+                </div>
+                   <p className="border-b mt-2"></p>
+                {/* ACTIONS */}
+                <div className="flex justify-end gap-3 mt-5">
+
+                  <button
+                    onClick={() => openUpdate(idea)}
+                    className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600"
+                  >
+                    <FaEdit />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSelectedIdea(idea);
+                      setIsDeleteOpen(true);
+                    }}
+                    className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600"
+                  >
+                    <MdDelete />
+                  </button>
+
+                </div>
+
               </div>
-
-              <p className="py-2 text-gray-600 text-sm">
-                {idea.shortDescription}
-              </p>
-
-              <p className="border-b my-3"></p>
-
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  onClick={() => openUpdateModal(idea)}
-                  className="bg-gray-200 hover:bg-gray-300 text-blue-600 p-2 rounded text-3xl"
-                >
-                  <FaEdit />
-                </button>
-
-                <button
-                  onClick={() => openDeleteModal(idea)}
-                  className="bg-gray-200 hover:bg-gray-300 text-red-600 p-2 rounded text-3xl"
-                >
-                  <MdDelete />
-                </button>
-              </div>
-
             </div>
           ))}
+
         </div>
       </div>
 
       {/* ================= UPDATE MODAL ================= */}
       {isUpdateOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
 
-          <div className="bg-white w-full max-w-lg p-5 rounded-xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white w-full max-w-xl rounded-2xl p-6">
 
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Update Idea</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-bold text-lg">Update Idea</h2>
               <IoClose
                 onClick={() => setIsUpdateOpen(false)}
                 className="text-2xl cursor-pointer"
               />
             </div>
 
-            <div className="mt-4 space-y-3">
-              {Object.keys(formData).map((key) =>
-                key !== "tags" ? (
-                  <input
-                    key={key}
-                    name={key}
-                    value={formData[key]}
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded-lg"
-                  />
-                ) : (
-                  <input
-                    key={key}
-                    name="tags"
-                    value={formData.tags}
-                    onChange={handleChange}
-                    className="w-full border p-3 rounded-lg"
-                  />
-                )
-              )}
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+
+              {Object.keys(formData).map((key) => (
+                <input
+                  key={key}
+                  name={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  placeholder={key}
+                  className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
+                />
+              ))}
+
             </div>
 
             <button
               onClick={handleUpdate}
-              className="w-full mt-5 bg-green-600 text-white p-3 rounded-xl"
+              className="w-full mt-5 bg-green-600 hover:bg-green-700 text-white p-3 rounded-xl"
             >
               Save Changes
             </button>
@@ -273,38 +288,45 @@ const MyIdeas = ({ refresh }) => {
 
       {/* ================= DELETE MODAL ================= */}
       {isDeleteOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
 
           <div className="bg-white w-full max-w-md rounded-2xl p-6">
 
             <h2 className="text-xl font-bold">Delete Idea</h2>
 
-            <p className="text-center mt-3">
-              Are you sure want to delete{" "}
-              <span className="text-red-500 font-semibold">
+            <p className="mt-4 text-gray-600">
+              Are you sure you want to delete{" "}
+              <span className="text-red-600 font-semibold">
                 {selectedIdea?.title}
-              </span> ?
+              </span>?
+            </p>
+
+            <p className="text-sm text-gray-400 mt-2">
+              This action cannot be undone.
             </p>
 
             <div className="flex justify-end gap-3 mt-6">
+
               <button
                 onClick={() => setIsDeleteOpen(false)}
-                className="px-4 py-2 border rounded-xl"
+                className="px-4 py-2 rounded-lg border"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-xl"
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
               >
                 Delete
               </button>
+
             </div>
 
           </div>
         </div>
       )}
+
     </>
   );
 };
