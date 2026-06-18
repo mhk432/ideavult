@@ -78,16 +78,20 @@ const IdeasPage = () => {
         <option value="Tech">Tech</option>
         <option value="AI">AI</option>
         <option value="Health">Health</option>
-        <option value="Business">Business</option>
+       <option>Agriculture</option>
+          <option>Finance</option>
         <option value="Education">Education</option>
       </select>
 
+              
+
+          
     </div>
 
     {/* CATEGORY CHIPS */}
     <div className="flex flex-wrap justify-center gap-2 mt-6">
 
-      {["All", "Health", "Tech", "EdTech", "Business", "Education"].map((item) => {
+      {["All", "Health", "Tech", "Agriculture", "AI","Education"].map((item) => {
         const isActive =
           (item === "All" && category === "") || category === item;
 

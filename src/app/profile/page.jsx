@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // session load হলে state set
+
   useEffect(() => {
     if (session?.user) {
       setName(session.user.name || "");
