@@ -7,11 +7,21 @@ import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa6";
 
 async function getIdeas() {
-  const res = await fetch("http://localhost:5000/ideas?limit=6", {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch("http://localhost:5000/ideas?limit=6", {
+      cache: "no-store",
+    });
 
-  return res.json();
+    if (!res.ok) {
+      console.log("API ERROR:", await res.text());
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("FETCH ERROR:", error);
+    return [];
+  }
 }
 
 export default async function FeaturedIdeas() {
