@@ -16,13 +16,11 @@ const Navbar = () => {
   const pathName = usePathname();
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [mounted, setMounted] = useState(false);
+ 
 
   const { data: session, isPending } = authClient.useSession();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -37,14 +35,7 @@ const Navbar = () => {
     localStorage.setItem("theme", newTheme);
   };
 
-  // ==================== LOADING SPINNER ====================
-  if (!mounted || isPending) {
-    return (
-      <div className="fixed top-0 left-0 right-0 z-50 h-20 bg-base-100/95 backdrop-blur-md border-b border-base-300 flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg text-green-500"></span>
-      </div>
-    );
-  }
+  
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-base-100/95 backdrop-blur-md border-b border-base-300 shadow-md">

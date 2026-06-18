@@ -6,7 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { Toaster, toast } from "react-hot-toast";
-import { authClient } from "@/lib/auth-client";
+ import { authClient } from "@/lib/auth-client";
 
 const MyIdeas = ({ refresh }) => {
   const [ideas, setIdeas] = useState([]);
@@ -30,39 +30,31 @@ const MyIdeas = ({ refresh }) => {
     proposedSolution: "",
   });
 
-  // ================= FETCH =================
-  const fetchIdeas = async () => {
-    try {
-      setLoading(true);
+  // ================= FETCH (NO JWT) =================
 
-      const session = await authClient.getSession();
 
-      const token =
-        session?.data?.session?.token ||
-        session?.data?.sessionToken ||
-        session?.data?.token;
+const fetchIdeas = async () => {
+  try {
+    setLoading(true);
 
-      const res = await fetch("http://localhost:5000/my-ideas", {
-        cache: "no-store",
-        headers: {
-          Authorization: `Bearer ${token || ""}`,
-        },
-      });
+    const session = await authClient.getSession();
+    const user = session?.data?.user;
 
-      if (!res.ok) {
-        setIdeas([]);
-        return;
-      }
+    if (!user) return;
 
-      const data = await res.json();
-      setIdeas(Array.isArray(data) ? data : []);
+    const res = await fetch(
+      `http://localhost:5000/my-ideas?userId=${user.id}`
+    );
 
-    } catch (err) {
-      setIdeas([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = await res.json();
+
+    setIdeas(data);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchIdeas();
@@ -149,9 +141,9 @@ const MyIdeas = ({ refresh }) => {
 
   if (loading) {
     return (
-      <p className="text-center mt-20 text-gray-500">
-        Loading your ideas...
-      </p>
+       <div className="fixed top-0 left-0 right-0 z-50 h-20 bg-base-100/95 backdrop-blur-md border-b border-base-300 flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-green-500"></span>
+      </div>
     );
   }
 
@@ -161,166 +153,117 @@ const MyIdeas = ({ refresh }) => {
 
       <div className="my-20 px-4 sm:px-8 lg:px-20">
 
-        {/* HEADER */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">
-            My Ideas
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Manage all your creative ideas in one place
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold mb-6">My Ideas</h1>
 
-        {/* GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {ideas.map((idea) => (
-            <div
-              key={idea._id}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden border"
-            >
+            <div key={idea._id} className="bg-white border rounded-xl p-4">
 
-              {/* IMAGE */}
-              <div className="relative h-48 w-full">
-                <Image
-                  src={idea.imageURL || "/placeholder.png"}
-                  fill
-                  className="object-cover"
-                  alt="idea"
-                />
+              <Image
+                src={idea.imageURL || "/placeholder.png"}
+                width={400}
+                height={200}
+                alt="idea"
+                className="w-full h-56"
+
+              />
+
+              <h2 className="font-bold mt-2">{idea.title}</h2>
+              <p className="text-sm text-gray-500">
+                {idea.shortDescription}
+              </p>
+
+              {/* TAGS */}
+              <div className="flex flex-wrap gap-2 mt-2">
+                {idea.tags?.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="bg-green-100 text-green-700 px-2 py-1 text-xs rounded-full"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <p className="border-b mt-2"></p>
+
+              <div className="flex   gap-2 mt-3 ">
+
+                <button onClick={() => openUpdate(idea)} 
+                className="text-blue-600 bg-blue-200 text-2xl p-2 rounded-md">
+                   <FaEdit />
+                </button>
+
+                <button onClick={() => {
+                  setSelectedIdea(idea);
+                  setIsDeleteOpen(true);
+                }}  className="text-red-600 bg-red-100
+                 text-2xl p-2 rounded-md">
+                  <MdDelete />
+                </button>
+
               </div>
 
-              {/* CONTENT */}
-              <div className="p-4">
-
-                <h2 className="font-bold text-lg text-gray-800">
-                  {idea.title}
-                </h2>
-
-                <p className="text-sm text-gray-500 mt-1">
-                  {idea.shortDescription}
-                </p>
-
-                {/* TAGS */}
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {idea.tags?.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="
-                        text-xs px-3 py-1 rounded-full
-                        bg-gradient-to-r from-green-100 to-lime-100
-                        text-green-700 border border-green-200
-                      "
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-                   <p className="border-b mt-2"></p>
-                {/* ACTIONS */}
-                <div className="flex justify-end gap-3 mt-5">
-
-                  <button
-                    onClick={() => openUpdate(idea)}
-                    className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600"
-                  >
-                    <FaEdit />
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setSelectedIdea(idea);
-                      setIsDeleteOpen(true);
-                    }}
-                    className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600"
-                  >
-                    <MdDelete />
-                  </button>
-
-                </div>
-
-              </div>
             </div>
           ))}
 
         </div>
       </div>
 
-      {/* ================= UPDATE MODAL ================= */}
+      {/* UPDATE MODAL */}
       {isUpdateOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-5 w-[500px] rounded">
 
-          <div className="bg-white w-full max-w-xl rounded-2xl p-6">
+            <div className="flex justify-between">
+              <h2>Update Idea</h2>
+              <IoClose onClick={() => setIsUpdateOpen(false)} />
+            </div>
 
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-bold text-lg">Update Idea</h2>
-              <IoClose
-                onClick={() => setIsUpdateOpen(false)}
-                className="text-2xl cursor-pointer"
+            {Object.keys(formData).map((key) => (
+              <input
+                key={key}
+                name={key}
+                value={formData[key]}
+                onChange={handleChange}
+                className="w-full border p-2 mt-2"
+                placeholder={key}
               />
-            </div>
-
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-
-              {Object.keys(formData).map((key) => (
-                <input
-                  key={key}
-                  name={key}
-                  value={formData[key]}
-                  onChange={handleChange}
-                  placeholder={key}
-                  className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-                />
-              ))}
-
-            </div>
+            ))}
 
             <button
               onClick={handleUpdate}
-              className="w-full mt-5 bg-green-600 hover:bg-green-700 text-white p-3 rounded-xl"
+              className="bg-green-600 text-white w-full mt-3 p-2"
             >
-              Save Changes
+              Save
             </button>
 
           </div>
         </div>
       )}
 
-      {/* ================= DELETE MODAL ================= */}
+      {/* DELETE MODAL */}
       {isDeleteOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-5 rounded w-[350px]">
 
-          <div className="bg-white w-full max-w-md rounded-2xl p-6">
+            <h2>Delete Idea</h2>
 
-            <h2 className="text-xl font-bold">Delete Idea</h2>
-
-            <p className="mt-4 text-gray-600">
-              Are you sure you want to delete{" "}
-              <span className="text-red-600 font-semibold">
-                {selectedIdea?.title}
-              </span>?
+            <p className="mt-2 ">
+              Are you sure you want to delete <span className="text-red-500">{selectedIdea?.title}?</span>
             </p>
 
-            <p className="text-sm text-gray-400 mt-2">
-              This action cannot be undone.
-            </p>
-
-            <div className="flex justify-end gap-3 mt-6">
-
-              <button
-                onClick={() => setIsDeleteOpen(false)}
-                className="px-4 py-2 rounded-lg border"
-              >
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setIsDeleteOpen(false)}>
                 Cancel
               </button>
 
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                className="bg-red-600 text-white px-3 py-1"
               >
                 Delete
               </button>
-
             </div>
 
           </div>
