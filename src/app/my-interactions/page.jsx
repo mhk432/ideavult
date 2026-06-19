@@ -23,7 +23,7 @@ export default function MyInteractions() {
     useEffect(() => {
         const fetchMyInteractions = async () => {
             try {
-                const res = await fetch("http://localhost:5000/my-interactions");
+                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-interactions`);
 
                 if (!res.ok) {
                     throw new Error(`HTTP Error: ${res.status}`);

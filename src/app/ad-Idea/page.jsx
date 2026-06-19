@@ -84,7 +84,7 @@ const AddIdea = () => {
         userName: user.name,
       };
 
-      const res = await fetch("http://localhost:5000/ideas", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

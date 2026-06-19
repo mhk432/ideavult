@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -8,7 +9,7 @@ import { SiGoogle } from "react-icons/si";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const LoginPage = () => {
+const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -17,7 +18,6 @@ const LoginPage = () => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleLogin = async (data) => {
@@ -35,7 +35,6 @@ const LoginPage = () => {
 
       if (res) {
         toast.success("Login successful!");
-
         setTimeout(() => {
           router.push(callbackUrl);
         }, 1500);
@@ -52,7 +51,6 @@ const LoginPage = () => {
         provider: "google",
         callbackURL: callbackUrl,
       });
-
       toast.success("Google Login Successful");
     } catch (error) {
       toast.error("Google Login Failed");
@@ -66,53 +64,35 @@ const LoginPage = () => {
           Login Your Account
         </h1>
 
-        <form
-          className="space-y-4"
-          onSubmit={handleSubmit(handleLogin)}
-        >
+        <form className="space-y-4" onSubmit={handleSubmit(handleLogin)}>
           <fieldset>
             <legend className="font-bold mb-2">Email</legend>
-
             <input
               type="email"
               className="input input-bordered w-full"
               placeholder="Enter your email"
-              {...register("email", {
-                required: "Email field is required",
-              })}
+              {...register("email", { required: "Email field is required" })}
             />
-
             {errors.email && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.email.message}
-              </p>
+              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
             )}
           </fieldset>
 
           <fieldset>
             <legend className="font-bold mb-2">Password</legend>
-
             <input
               type="password"
               className="input input-bordered w-full"
               placeholder="Enter your password"
-              {...register("password", {
-                required: "Password field is required",
-              })}
+              {...register("password", { required: "Password field is required" })}
             />
-
             {errors.password && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.password.message}
-              </p>
+              <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
             )}
           </fieldset>
 
           <div className="text-right">
-            <Link
-              href="#"
-              className="text-sm text-blue-500 hover:underline"
-            >
+            <Link href="#" className="text-sm text-blue-500 hover:underline">
               Forgot Password?
             </Link>
           </div>
@@ -136,11 +116,9 @@ const LoginPage = () => {
         </button>
 
         <p className="mt-5 text-center text-gray-600">
-          Don't have an account?{" "}
+          Don,t have an account?{" "}
           <Link
-            href={`/register?callbackUrl=${encodeURIComponent(
-              callbackUrl
-            )}`}
+            href={`/sinup?callbackUrl=${encodeURIComponent(callbackUrl)}`}
             className="text-blue-500 font-semibold hover:underline"
           >
             Register
@@ -150,6 +128,20 @@ const LoginPage = () => {
         <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
+  );
+};
+
+const LoginPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 };
 

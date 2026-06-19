@@ -24,7 +24,7 @@ const IdeasPage = () => {
       if (endDate) params.append("endDate", endDate);
 
       const res = await fetch(
-        `http://localhost:5000/ideas?${params.toString()}`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas?${params.toString()}`
       );
 
       const data = await res.json();

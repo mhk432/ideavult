@@ -43,7 +43,7 @@ const fetchIdeas = async () => {
     if (!user) return;
 
     const res = await fetch(
-      `http://localhost:5000/my-ideas?userId=${user.id}`
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/my-ideas?userId=${user.id}`
     );
 
     const data = await res.json();
@@ -88,7 +88,7 @@ const fetchIdeas = async () => {
   const handleUpdate = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/ideas/${selectedIdea._id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${selectedIdea._id}`,
         {
           method: "PUT",
           headers: {
@@ -120,7 +120,7 @@ const fetchIdeas = async () => {
   const handleDelete = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/ideas/${selectedIdea._id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${selectedIdea._id}`,
         { method: "DELETE" }
       );
 

@@ -26,7 +26,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/ideas/${ideaId}/comments`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${ideaId}/comments`
       );
 
       const data = await res.json();
@@ -71,7 +71,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
       setPosting(true);
 
       const res = await fetch(
-        `http://localhost:5000/ideas/${ideaId}/comments`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${ideaId}/comments`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
   // ================= DELETE =================
   const handleDelete = async (commentId) => {
     const res = await fetch(
-      `http://localhost:5000/ideas/${ideaId}/comments/${commentId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${ideaId}/comments/${commentId}`,
       {
         method: "DELETE",
       }
@@ -117,7 +117,7 @@ export default function CommentSection({ ideaId, showInput = true }) {
 
   const handleEditSave = async () => {
     const res = await fetch(
-      `http://localhost:5000/ideas/${ideaId}/comments/${editId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${ideaId}/comments/${editId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

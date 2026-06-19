@@ -8,7 +8,7 @@ import { FaArrowRight } from "react-icons/fa6";
 
 async function getIdeas() {
   try {
-    const res = await fetch("http://localhost:5000/ideas?limit=6", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/ideas?limit=6`, {
       cache: "no-store",
     });
 
